@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.view.ViewConfiguration;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+import android.content.res.Resources;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -20,6 +21,10 @@ public class SoftNavigationCheck extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("isSoftNavigationAvailable")) {
             this.isSoftNavigationAvailable(callbackContext);
+            return true;
+        }
+        if (action.equals("navigationBarHeight")) {
+            this.navigationBarHeight(callbackContext);
             return true;
         }
         return false;
@@ -40,5 +45,14 @@ public class SoftNavigationCheck extends CordovaPlugin {
         boolean hasHomeKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_HOME);
 
         return (!(hasBackKey && hasHomeKey));
+    }
+
+    public void navigationBarHeight(CallbackContext callbackContext) {
+        Resources resources = this.cordova.getActivity().getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+             callbackContext.success(resources.getDimensionPixelSize(resourceId));
+            }
+        callbackContext.success(0);
     }
 }
