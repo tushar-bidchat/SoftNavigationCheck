@@ -1,16 +1,14 @@
 package com.bidchat.SoftNavigationCheck;
 
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CallbackContext;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.view.ViewConfiguration;
+import android.content.res.Resources;
+import android.util.DisplayMetrics;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-import android.content.res.Resources;
+
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaPlugin;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * This class echoes a string called from JavaScript.
@@ -49,9 +47,14 @@ public class SoftNavigationCheck extends CordovaPlugin {
 
     public void navigationBarHeight(CallbackContext callbackContext) {
         Resources resources = this.cordova.getActivity().getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        int heightInPixels= resources.getDimensionPixelSize(resourceId);
+        float heightInDP = heightInPixels / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+
         if (resourceId > 0) {
-             callbackContext.success(resources.getDimensionPixelSize(resourceId));
+             callbackContext.success((int) heightInDP);
             }
         callbackContext.success(0);
     }
